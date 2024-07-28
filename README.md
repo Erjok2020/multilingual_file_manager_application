@@ -25,5 +25,3 @@ This project is a multi-user file manager application built with Node.js, Redis,
 - i18next
 - Jest
 
-## License
-MIT
