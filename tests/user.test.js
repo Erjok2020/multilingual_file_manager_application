@@ -5,7 +5,9 @@ describe('User Registration and Login', () => {
     it('should register a user', async () => {
         const response = await request(app)
             .post('/api/users/register')
-            .send({ username: 'testuser', password: 'password123' });
+            .send({ username: 'testuser',
+
+                password: 'password123' });
         expect(response.status).toBe(201);
         expect(response.body).toHaveProperty('user');
     });
