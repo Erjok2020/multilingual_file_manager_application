@@ -1,3 +1,10 @@
+# [4.16.0](https://github.com/OptimalBits/bull/compare/v4.15.1...v4.16.0) (2024-07-30)
+
+
+### Features
+
+* **job:** support debouncing ([#2760](https://github.com/OptimalBits/bull/issues/2760)) ([603befe](https://github.com/OptimalBits/bull/commit/603befe439fb4e318137b88550ab4d0c6c2bbcb3))
+
 ## [4.15.1](https://github.com/OptimalBits/bull/compare/v4.15.0...v4.15.1) (2024-07-04)
 
 

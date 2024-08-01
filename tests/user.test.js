@@ -1,13 +1,16 @@
 const request = require('supertest');
-const app = require('../src/app');  // Import the app from app.js
+const app = require('../src/app');
+const User = require('../src/models/User');
 
 describe('User Registration and Login', () => {
+    beforeAll(async () => {
+        await User.sync({ force: true });
+    });
+
     it('should register a user', async () => {
         const response = await request(app)
             .post('/api/users/register')
-            .send({ username: 'testuser',
-
-                password: 'password123' });
+            .send({ username: 'testuser', password: 'password123' });
         expect(response.status).toBe(201);
         expect(response.body).toHaveProperty('user');
     });

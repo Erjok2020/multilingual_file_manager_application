@@ -1,19 +1,21 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('mysql://username:password@localhost:3306/database_name');
+module.exports = (sequelize, DataTypes) => {
+    const File = sequelize.define('File', {
+        filename: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        path: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+    });
 
-const File = sequelize.define('File', {
-    filename: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    filepath: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-});
+    File.associate = (models) => {
+        File.belongsTo(models.User, {
+            foreignKey: 'user_id',
+            onDelete: 'CASCADE',
+        });
+    };
 
-module.exports = { File };
+    return File;
+};

@@ -57,6 +57,7 @@ const Job = function(queue, name, data, opts) {
   this.attemptsMade = 0;
 
   this.toKey = _.bind(queue.toKey, queue);
+  this.debounceId = this.opts.debounce ? this.opts.debounce.id : undefined;
 };
 
 function setDefaultOpts(opts) {
@@ -82,7 +83,8 @@ function addJob(queue, client, job) {
   return scripts.addJob(client, queue, jobData, {
     lifo: opts.lifo,
     customJobId: opts.jobId,
-    priority: opts.priority
+    priority: opts.priority,
+    debounce: opts.debounce
   });
 }
 
@@ -182,6 +184,7 @@ Job.prototype.toJSON = function() {
     failedReason: this.failedReason,
     stacktrace: this.stacktrace || null,
     returnvalue: this.returnvalue || null,
+    debounceId: this.debounceId || null,
     finishedOn: this.finishedOn || null,
     processedOn: this.processedOn || null
   };
@@ -639,6 +642,10 @@ Job.fromJSON = function(queue, json, jobId) {
 
   if (typeof json.returnvalue === 'string') {
     job.returnvalue = getReturnValue(json.returnvalue);
+  }
+
+  if (json.deid) {
+    job.debounceId = json.deid;
   }
 
   return job;

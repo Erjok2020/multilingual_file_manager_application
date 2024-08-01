@@ -1,8 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser } = require('../controllers/authController');
 
-router.post('/register', registerUser);
-router.post('/login', loginUser);
+// Define file-related routes
+router.post('/upload', (req, res) => {
+    // Handle file upload
+    res.send('File uploaded');
+});
+
+router.get('/download', (req, res) => {
+    // Handle file download
+    res.send('File downloaded');
+});
 
 module.exports = router;

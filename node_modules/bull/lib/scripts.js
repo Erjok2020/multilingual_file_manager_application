@@ -43,7 +43,10 @@ const scripts = {
       job.delay ? job.timestamp + job.delay : 0,
       opts.priority || 0,
       opts.lifo ? 'RPUSH' : 'LPUSH',
-      queue.token
+      queue.token,
+      job.debounceId ? `${queueKeys.de}:${job.debounceId}` : null,
+      opts.debounce ? opts.debounce.id : null,
+      opts.debounce ? opts.debounce.ttl : null,
     ];
     keys = keys.concat(args);
     return client.addJob(keys);
@@ -401,7 +404,8 @@ const scripts = {
       queue.keys.priority,
       queue.toKey(jobId),
       queue.toKey(`${jobId}:logs`),
-      queue.keys.limiter
+      queue.keys.limiter,
+      queue.toKey(''),
     ];
     return queue.client.removeJob(keys.concat([jobId, queue.token]));
   },

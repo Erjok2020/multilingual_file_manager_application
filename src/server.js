@@ -1,6 +1,20 @@
-const app = require('./app');
+const request = require('supertest');
+const app = require('../src/app');
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+describe('User Registration and Login', () => {
+    it('should register a user', async () => {
+        const response = await request(app)
+            .post('/api/users/register')
+            .send({ username: 'testuser', password: 'password123' });
+        expect(response.status).toBe(201);
+        expect(response.body).toHaveProperty('user');
+    });
+
+    it('should login a user', async () => {
+        const response = await request(app)
+            .post('/api/users/login')
+            .send({ username: 'testuser', password: 'password123' });
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('token');
+    });
 });

@@ -1,43 +1,36 @@
 const express = require('express');
-const session = require('express-session');
-const RedisStore = require('connect-redis')(session);
-const redisClient = require('./redisClient'); // Assuming you have this file for Redis client setup
-const i18n = require('i18next');
+const i18next = require('i18next');
 const i18nextMiddleware = require('i18next-http-middleware');
-const bodyParser = require('body-parser');
-const passport = require('passport');
-
-const app = express();
-
-// Middleware setup
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(session({
-    store: new RedisStore({ client: redisClient }),
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: false,
-}));
-
-// Initialize i18n
-app.use(i18nextMiddleware.handle(i18n));
-
-// Passport setup
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Define routes
+const Backend = require('i18next-fs-backend');
 const userRoutes = require('./routes/userRoutes');
 const fileRoutes = require('./routes/fileRoutes');
 
+const app = express();
+const port = process.env.PORT || 3000;
+
+// i18next setup
+i18next.use(Backend).use(i18nextMiddleware.LanguageDetector).init({
+    fallbackLng: 'en',
+    backend: {
+        loadPath: __dirname + '/locales/{{lng}}/{{ns}}.json'
+    }
+});
+
+app.use(i18nextMiddleware.handle(i18next));
+
+// Middleware
+app.use(express.json());
+
+// Routes
 app.use('/api/users', userRoutes);
 app.use('/api/files', fileRoutes);
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Root route
+app.get('/', (req, res) => {
+    res.send('Hello, world!');
 });
 
-module.exports = app;
+// Start the server
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
